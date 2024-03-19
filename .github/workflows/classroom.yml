@@ -1,0 +1,30 @@
+name: Autograding Tests
+'on':
+- push
+- workflow_dispatch
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Image Manipulation Test
+      id: image-manipulation-test
+      uses: education/autograding-command-grader@v1
+      with:
+        test-name: Image Manipulation Test
+        setup-command: ''
+        command: mvn test; mvn test | grep -zqv '\[ERROR\]'
+        timeout: 5
+    - name: Autograding Reporter
+      uses: education/autograding-grading-reporter@v1
+      env:
+        IMAGE-MANIPULATION-TEST_RESULTS: "${{steps.image-manipulation-test.outputs.result}}"
+      with:
+        runners: image-manipulation-test
