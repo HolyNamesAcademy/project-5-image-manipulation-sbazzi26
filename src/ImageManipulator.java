@@ -103,13 +103,12 @@ public class ImageManipulator {
      * @return black/white stylized form of image
      */
     public static Img ConvertToBW(Img image) {
-        Img imagE = image;
         ArrayList<Double> luminance = new ArrayList<>();
         RGB white = new RGB(225,225,225);
         RGB black = new RGB(0,0,0);
-        for(int i = 0; i < imagE.GetHeight(); i++){
-            for(int j = 0; j < imagE.GetWidth(); j++){
-                RGB vals = imagE.GetRGB(j,i);
+        for(int i = 0; i < image.GetHeight(); i++){
+            for(int j = 0; j < image.GetWidth(); j++){
+                RGB vals = image.GetRGB(j,i);
                 int r = vals.GetRed();
                 int g = vals.GetGreen();
                 int b = vals.GetBlue();
@@ -129,22 +128,23 @@ public class ImageManipulator {
             luminance.set(pos, lumi);
         }
         double medianLuminance = luminance.get(luminance.size()/2);
-        for(int i = 0; i < imagE.GetHeight(); i++){
-            for(int j = 0; j < imagE.GetWidth(); j++){
-                RGB vals = imagE.GetRGB(j,i);
+        for(int i = 0; i < image.GetHeight(); i++){
+            for(int j = 0; j < image.GetWidth(); j++){
+                RGB vals = image.GetRGB(j,i);
                 int r = vals.GetRed();
                 int g = vals.GetGreen();
                 int b = vals.GetBlue();
+                image.SetRGB(j,i,vals);
                 double lum = (Math.sqrt(.299*r*r + .587*g*g + .114*b*b));
                 if(lum < medianLuminance){
-                    imagE.SetRGB(j,i,white);
+                    image.SetRGB(j,i,white);
                 }
                 else{
-                    imagE.SetRGB(j,i,black);
+                    image.SetRGB(j,i,black);
                 }
             }
         }
-        return imagE;
+        return image;
     }
 
     /**
@@ -152,16 +152,20 @@ public class ImageManipulator {
      * @param image image to transform
      * @return image rotated 90 degrees clockwise
      */
-    public  static Img RotateImage(Img image) {
-        Img rotatedImage = new Img(image.GetHeight(), image.GetWidth());
-        for(int i = 0; i < image.GetHeight(); i++){
-            for(int j = 0; j < image.GetWidth(); j++){
-                RGB vals = image.GetRGB(j,i);
+    public static Img RotateImage(Img image) {
+        int newWidth = image.GetHeight();
+        int newHeight = image.GetWidth();
+        Img rotatedImage = new Img(newWidth, newHeight);
+
+        for (int i = 0; i < newHeight; i++) {
+            for (int j = 0; j < newWidth; j++) {
+                RGB vals = image.GetRGB(j, i);
                 int newJ = i;
-                int newI = image.GetWidth() - j - 1;
-                rotatedImage.SetRGB(newJ,newI,vals);
+                int newI = newWidth - j - 1;
+                rotatedImage.SetRGB(newI, newJ, vals);
             }
         }
+
         return rotatedImage;
     }
 
@@ -191,6 +195,32 @@ public class ImageManipulator {
                 vals.SetRed((int)(r*1.2));
                 vals.SetBlue((int)(b/1.5));
                 image.SetRGB(j,i,vals);
+            }
+        }
+        Img halo = new Img ("halo.png");
+        for(int i = 0; i < image.GetHeight(); i++){
+            for(int j = 0; j < image.GetWidth(); j++){
+                RGB imageVals = image.GetRGB(j,i);
+                int hi = i*(halo.GetHeight()/image.GetHeight());//divide by constant
+                int hj = j*(halo.GetWidth()/image.GetWidth());
+                RGB haloVals = halo.GetRGB(hj,hi);//scale values for halo
+                imageVals.SetRed((int)(0.65*imageVals.GetRed() + 0.35*haloVals.GetRed()));
+                imageVals.SetGreen((int)(0.65*imageVals.GetGreen() + 0.35*haloVals.GetGreen()));
+                imageVals.SetBlue((int)(0.65*imageVals.GetBlue()+ 0.35*haloVals.GetBlue()));
+                image.SetRGB(j,i,imageVals);
+            }
+        }
+        Img grain = new Img("decorative_grain.png");
+        for(int i = 0; i < image.GetHeight(); i++){
+            for(int j = 0; j < image.GetWidth(); j++){
+                RGB imageVals = image.GetRGB(j,i);
+                int di = i*(grain.GetHeight()/image.GetHeight());
+                int dj = j*(grain.GetWidth()/image.GetWidth());
+                RGB grainVals = grain.GetRGB(dj,di);//scale values for halo
+                imageVals.SetRed((int)(0.95*imageVals.GetRed() + 0.05*grainVals.GetRed()));
+                imageVals.SetGreen((int)(0.95*imageVals.GetGreen() + 0.05*grainVals.GetGreen()));
+                imageVals.SetBlue((int)(0.95*imageVals.GetBlue()+ 0.05*grainVals.GetBlue()));
+                image.SetRGB(j,i,imageVals);
             }
         }
         return image;
