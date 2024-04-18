@@ -15,7 +15,7 @@ import java.io.IOException;
  * work that needs to be done before calling BufferedImage, such as bit-shifting.
  */
 public class Img extends JPanel {
-    private BufferedImage image;
+    private static BufferedImage image;
 
     // Constructors
 
@@ -59,8 +59,8 @@ public class Img extends JPanel {
      */
     public void SetRGB(int xVal, int yVal, RGB rgb) {
         int rgbVal = ((rgb.GetRed() & 0x000000FF) << 16)
-                        | ((rgb.GetGreen() & 0x000000FF) << 8)
-                        | ((rgb.GetBlue() & 0x000000FF));
+                | ((rgb.GetGreen() & 0x000000FF) << 8)
+                | ((rgb.GetBlue() & 0x000000FF));
         image.setRGB(xVal, yVal, rgbVal);
 
     }

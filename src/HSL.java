@@ -19,25 +19,29 @@ public class HSL {
      * @param lightness lightness value
      */
     public HSL(int hue, double saturation, double lightness) {
-        // Implement this method and remove the line below
-        throw new UnsupportedOperationException();
+        if(hue >= 0 && hue <=360){
+            this.hue=hue;
+        }
+        if(saturation >= 0 && saturation <=1){
+            this.saturation=saturation;
+        }
+        if(lightness >= 0 && lightness <=1){
+            this.lightness=lightness;
+        }
     }
 
     // Getters
 
     public int GetHue() {
-        // Implement this method and remove the line below
-        throw new UnsupportedOperationException();
+        return hue;
     }
 
     public double GetSaturation() {
-        // Implement this method and remove the line below
-        throw new UnsupportedOperationException();
+        return saturation;
     }
 
     public double GetLightness() {
-        // Implement this method and remove the line below
-        throw new UnsupportedOperationException();
+        return lightness;
     }
 
     /*
@@ -48,18 +52,21 @@ public class HSL {
     0 <= lightness <= 1
      */
     public void SetHue(int hue) {
-        // Implement this method and remove the line below
-        throw new UnsupportedOperationException();
+        if(hue >= 0 && hue <=360){
+            this.hue=hue;
+        }
     }
 
     public void SetSaturation(double saturation) {
-        // Implement this method and remove the line below
-        throw new UnsupportedOperationException();
+        if(saturation >= 0 && saturation <=1){
+            this.saturation=saturation;
+        }
     }
 
     public void SetLightness(double lightness) {
-        // Implement this method and remove the line below
-        throw new UnsupportedOperationException();
+        if(lightness >= 0 && lightness <=1){
+            this.lightness=lightness;
+        }
     }
 
     /**
